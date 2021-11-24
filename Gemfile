@@ -2,15 +2,9 @@ source "http://rubygems.org"
 
 group :development do
   gem "rake"
-  gem "rspec", "~> 2.8.0"
-  gem "yard", "~> 0.7"
-  gem "rdoc", "~> 3.12"
-  gem "bundler", "~> 1.0.0"
-  gem "jeweler", "~> 1.8.3"
-  gem "rcov", ">= 0"
-end
-
-group :test do
-  gem "rake"
-  gem "rspec", "~> 2.8.0"
+  gem "rspec"
+  gem "yard"
+  gem "rdoc"
+  gem "bundler"
+  gem "jeweler"
 end
