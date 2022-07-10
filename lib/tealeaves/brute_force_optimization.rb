@@ -18,24 +18,24 @@ module TeaLeaves
     def initial_test_parameters(opts={})
       parameters = []
       INITIAL_PARAMETER_VALUES.each do |alpha|
-        parameters << {:alpha => alpha, :seasonality => :none, :trend => :none}
-        
+        parameters << {alpha: alpha, seasonality: :none, trend: :none}
+
         unless opts[:seasonality] == :none && opts[:trend] == :none
           INITIAL_PARAMETER_VALUES.each do |b|
-            parameters << {:alpha => alpha, :beta => b, :seasonality => :none, :trend => :additive}
-            parameters << {:alpha => alpha, :beta => b, :seasonality => :none, :trend => :multiplicative}
-            parameters << {:alpha => alpha, :gamma => b, :trend => :none, :seasonality => :additive}
-            parameters << {:alpha => alpha, :gamma => b, :trend => :none, :seasonality => :multiplicative}
-            
+            parameters << {alpha: alpha, beta: b, seasonality: :none, trend: :additive}
+            parameters << {alpha: alpha, beta: b, seasonality: :none, trend: :multiplicative}
+            parameters << {alpha: alpha, gamma: b, trend: :none, seasonality: :additive}
+            parameters << {alpha: alpha, gamma: b, trend: :none, seasonality: :multiplicative}
+
             INITIAL_PARAMETER_VALUES.each do |gamma|
               [:additive, :multiplicative].each do |trend|
                 [:additive, :multiplicative].each do |seasonality|
                   parameters << {
-                    :alpha => alpha,
-                    :beta => b,
-                    :gamma => gamma,
-                    :trend => trend,
-                    :seasonality => seasonality
+                    alpha: alpha,
+                    beta: b,
+                    gamma: gamma,
+                    trend: trend,
+                    seasonality: seasonality
                   }
                 end
               end
