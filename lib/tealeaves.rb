@@ -7,8 +7,8 @@ require 'tealeaves/brute_force_optimization'
 require 'tealeaves/exponential_smoothing_forecast'
 
 module TeaLeaves
-  def self.optimal_model(time_series, period)
-    BruteForceOptimization.new(time_series, period).optimize
+  def self.optimal_model(time_series, period, opts={})
+    BruteForceOptimization.new(time_series, period, opts).optimize
   end
 
   def self.forecast(time_series, period, periods_ahead=nil)

@@ -15,31 +15,23 @@ module TeaLeaves
       end
     end
 
-    def initial_test_parameters(opts={})
+    def initial_test_parameters
       parameters = []
+
       INITIAL_PARAMETER_VALUES.each do |alpha|
-        parameters << {alpha: alpha, seasonality: :none, trend: :none}
+        parameters << {alpha: alpha, beta: nil, gamma: nil, trend: :none, seasonality: :none}
 
-        unless opts[:seasonality] == :none && opts[:trend] == :none
-          INITIAL_PARAMETER_VALUES.each do |b|
-            parameters << {alpha: alpha, beta: b, seasonality: :none, trend: :additive}
-            parameters << {alpha: alpha, beta: b, seasonality: :none, trend: :multiplicative}
-            parameters << {alpha: alpha, gamma: b, trend: :none, seasonality: :additive}
-            parameters << {alpha: alpha, gamma: b, trend: :none, seasonality: :multiplicative}
+        INITIAL_PARAMETER_VALUES.each do |beta|
+          parameters << {alpha: alpha, beta: beta, gamma: nil, trend: :additive, seasonality: :none} if has_additive_trend? && has_no_seasonality?
+          parameters << {alpha: alpha, beta: beta, gamma: nil, trend: :multiplicative, seasonality: :none} if has_multiplicative_trend? && has_no_seasonality?
+          parameters << {alpha: alpha, beta: nil, gamma: beta, trend: :none, seasonality: :additive} if has_no_trend? && has_additive_seasonality?
+          parameters << {alpha: alpha, beta: nil, gamma: beta, trend: :none, seasonality: :multiplicative} if has_no_trend? && has_multiplicative_seasonality?
 
-            INITIAL_PARAMETER_VALUES.each do |gamma|
-              [:additive, :multiplicative].each do |trend|
-                [:additive, :multiplicative].each do |seasonality|
-                  parameters << {
-                    alpha: alpha,
-                    beta: b,
-                    gamma: gamma,
-                    trend: trend,
-                    seasonality: seasonality
-                  }
-                end
-              end
-            end
+          INITIAL_PARAMETER_VALUES.each do |gamma|
+            parameters << {alpha: alpha, beta: beta, gamma: gamma, trend: :additive, seasonality: :additive} if has_additive_trend? && has_additive_seasonality?
+            parameters << {alpha: alpha, beta: beta, gamma: gamma, trend: :additive, seasonality: :multiplicative} if has_additive_trend? && has_multiplicative_seasonality?
+            parameters << {alpha: alpha, beta: beta, gamma: gamma, trend: :multiplicative, seasonality: :additive} if has_multiplicative_trend? && has_additive_seasonality?
+            parameters << {alpha: alpha, beta: beta, gamma: gamma, trend: :multiplicative, seasonality: :multiplicative} if has_multiplicative_trend? && has_multiplicative_seasonality?
           end
         end
       end
@@ -79,6 +71,30 @@ module TeaLeaves
       initial_test_parameters.map do |parameters|
         ExponentialSmoothingForecast.new(@time_series, @period, parameters)
       end
+    end
+
+    def has_no_trend?
+      @opts[:trend] == :none || @opts[:trend].nil?
+    end
+
+    def has_additive_trend?
+      @opts[:trend] == :additive || @opts[:trend].nil?
+    end
+
+    def has_multiplicative_trend?
+      @opts[:trend] == :multiplicative || @opts[:trend].nil?
+    end
+
+    def has_no_seasonality?
+      @opts[:seasonality] == :none || @opts[:seasonality].nil?
+    end
+
+    def has_additive_seasonality?
+      @opts[:seasonality] == :additive || @opts[:seasonality].nil?
+    end
+
+    def has_multiplicative_seasonality?
+      @opts[:seasonality] == :multiplicative || @opts[:seasonality].nil?
     end
   end
 end
