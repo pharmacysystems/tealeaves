@@ -72,7 +72,7 @@ module TeaLeaves
     end
 
     def optimum(models)
-      models.min_by(&:mean_squared_error)
+      models.reject { |m| m.mean_squared_error.nan? }.min_by(&:mean_squared_error)
     end
     
     def initial_models

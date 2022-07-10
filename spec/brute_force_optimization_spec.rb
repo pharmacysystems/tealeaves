@@ -5,6 +5,10 @@ describe TeaLeaves::BruteForceOptimization do
     described_class.new([1,2,3,4], 1).initial_test_parameters.size.should == 1014
   end
 
+  it "should work with uniform data" do
+    described_class.new([1,1,1,1], 1).optimize
+  end
+
   it "should produce an initial model" do
 
   end
